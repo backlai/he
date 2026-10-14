@@ -1,0 +1,21 @@
+name: health_diet_app
+description: 离线健康饮食助手，支持食物营养、饮食记录、饮水和体重记录。
+publish_to: 'none'
+version: 1.5.0+5
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.3.3+1
+  path: ^1.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
