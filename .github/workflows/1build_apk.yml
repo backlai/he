@@ -1,0 +1,43 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: stable
+          cache: true
+      - name: Generate Android platform files
+        run: |
+          cp main.dart /tmp/health_diet_main.dart
+          flutter create . --platforms=android --org com.healthdiet
+          mkdir -p lib
+          cp /tmp/health_diet_main.dart lib/main.dart
+      - name: Get packages
+        run: flutter pub get
+      - name: Analyze source
+        run: flutter analyze
+        continue-on-error: true
+      - name: Build release APK
+        run: flutter build apk --release
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-diet-v1.5-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
